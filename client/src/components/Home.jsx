@@ -100,7 +100,7 @@ export default function Home() {
 
         {/* 📊 Charts + Map (Right) */}
         <div className="md:w-2/3 bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl p-6 border border-white/20 h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-sky-600 scrollbar-track-transparent">
-          <h2 className="text-2xl font-semibold mb-4 text-center">📊 Kenya Annual Climate Trends</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-center">Kenya Annual Climate Trends</h2>
 
           <div className="grid grid-cols-1 gap-6">
             {/* 🌡 Temperature Chart */}

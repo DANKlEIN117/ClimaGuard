@@ -5,31 +5,85 @@ import WeatherCard from "./WeatherCard";
 import CropAdvice from "./CropAdvice";
 
 function FarmerDashboard() {
-  const [city, setCity] = useState("Nairobi");
+  const [county, setCounty] = useState("");
   const [weather, setWeather] = useState(null);
+  const [error, setError] = useState("");
   const [advice, setAdvice] = useState("");
 
-  const getWeather = async () => {
+  const handleSearch = async () => {
+    if (!county.trim()) {
+      setError("Please enter a county name");
+      setWeather(null);
+      return;
+    }
+
     try {
-      const res = await axios.get(`http://localhost:5000/api/weather/${city}`);
-      setWeather(res.data);
+      setError("");
+      const response = await fetch(`http://localhost:5000/api/weather/${county}`);
+      const data = await response.json();
+
+      if (data.message === "Error fetching weather data" || data.cod === 401) {
+        setError("Failed to fetch weather data. Try another county.");
+        setWeather(null);
+      } else {
+        setWeather(data);
+      }
     } catch (err) {
-      console.error(err);
+      setError("Server not reachable 😢");
+      setWeather(null);
     }
   };
 
+
   useEffect(() => {
-    getWeather();
+    handleSearch();
   }, []);
 
   useEffect(() => {
-    if (weather) {
-      const temp = Math.round(weather.main.temp);
-      if (temp > 30) setAdvice("🔥 It’s quite hot — irrigate early mornings or evenings.");
-      else if (temp < 20) setAdvice("🌥 Cool weather — consider crops like potatoes and beans.");
-      else setAdvice("🌿 Great weather for most crops — monitor soil moisture levels.");
+  if (weather && weather.main && typeof weather.main.temp !== "undefined") {
+    const temp = Math.round(weather.main.temp);
+
+    if (temp > 33) {
+      setAdvice(
+        "Hot Conditions Alert (Above 33°C):** High temperatures can cause soil moisture loss and crop stress. " +
+        "Farmers should irrigate early in the morning or late in the evening to reduce evaporation. " +
+        "Mulching can help retain soil moisture. Focus on drought-tolerant crops like sorghum, millet, or cowpeas."
+      );
+    } 
+    else if (temp >= 28 && temp <= 33) {
+      setAdvice(
+        "Warm Conditions (28–33°C):** Great for crops like maize, beans, and tomatoes. " +
+        "Ensure consistent watering to avoid heat stress, especially during flowering. " +
+        "Watch for pests like aphids that thrive in warm conditions."
+      );
+    } 
+    else if (temp >= 20 && temp < 28) {
+      setAdvice(
+        "Moderate Weather (20–27°C): Perfect for most crops such as potatoes, beans, and vegetables. " +
+        "Maintain balanced watering, and consider organic fertilizer to boost growth. " +
+        "Monitor humidity to prevent fungal diseases."
+      );
+    } 
+    else if (temp >= 15 && temp < 20) {
+      setAdvice(
+        "🌤 **Cool Conditions (15–19°C):** Ideal for crops like cabbages, carrots, and peas. " +
+        "You can take advantage of the cool environment to plant leafy greens. " +
+        "Avoid overwatering as evaporation is slow in this temperature range."
+      );
+    } 
+    else {
+      setAdvice(
+        "Cold Conditions (Below 15°C): Growth may slow for tropical crops. " +
+        "Protect seedlings using greenhouse covers or raised seedbeds. " +
+        "Choose cold-tolerant crops like kale, spinach, or barley."
+      );
     }
-  }, [weather]);
+  } else {
+    setAdvice("");
+  }
+}, [weather]);
+
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-800 via-sky-800 to-sky-600 text-white flex flex-col">
@@ -44,10 +98,10 @@ function FarmerDashboard() {
         {/* Weather Card */}
         <div className="col-span-1">
           <WeatherCard
-            city={city}
-            setCity={setCity}
+            county={county}
+            setCounty={setCounty}
             weather={weather}
-            getWeather={getWeather}
+            handleSearch={handleSearch}
           />
         </div>
 
