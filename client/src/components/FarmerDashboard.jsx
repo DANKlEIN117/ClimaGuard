@@ -3,6 +3,8 @@ import axios from "axios";
 import KenyaMap from "./KenyaMap";
 import WeatherCard from "./WeatherCard";
 import CropAdvice from "./CropAdvice";
+import { Link } from "react-router-dom";
+
 
 function FarmerDashboard() {
   const [county, setCounty] = useState("");
@@ -91,6 +93,13 @@ function FarmerDashboard() {
       <nav className="flex justify-between items-center px-10 py-4 bg-white/10 backdrop-blur-md shadow-md border-b border-white/20">
         <h1 className="text-2xl font-bold tracking-wide">Farmer Dashboard</h1>
         <p className="text-sm text-gray-200">Empowering Climate-Smart Farming</p>
+        <Link
+          to="/ai-assistant"
+          className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg font-medium text-white"
+        >
+          AI Agriculture Assistant
+        </Link>
+
       </nav>
 
       {/* 🔸 Dashboard Content */}

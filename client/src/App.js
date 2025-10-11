@@ -3,6 +3,10 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Home from "./components/Home";
 import FarmerDashboard from "./components/FarmerDashboard";
 import SearchContainer from "./components/SearchContainer";
+import AIAssistant from "./pages/AIAssistant";
+
+
+
 
 
 function App() {
@@ -19,6 +23,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/dashboard" element={<FarmerDashboard />} />
+        <Route path="/ai-assistant" element={<AIAssistant />} />
       </Routes>
     </Router>
   );

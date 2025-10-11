@@ -35,15 +35,31 @@ ChartJS.register(
 );
 
 export default function Home() {
-  const [city, setCity] = useState("");
+  const [county, setCounty] = useState("");
   const [weather, setWeather] = useState(null);
+  const [error, setError] = useState("");
 
-  const getWeather = async () => {
+  const handleSearch = async () => {
+    if (!county.trim()) {
+      setError("Please enter a county name");
+      setWeather(null);
+      return;
+    }
+
     try {
-      const res = await axios.get(`http://localhost:5000/api/weather/${city}`);
-      setWeather(res.data);
+      setError("");
+      const response = await fetch(`http://localhost:5000/api/weather/${county}`);
+      const data = await response.json();
+
+      if (data.message === "Error fetching weather data" || data.cod === 401) {
+        setError("Failed to fetch weather data. Try another county.");
+        setWeather(null);
+      } else {
+        setWeather(data);
+      }
     } catch (err) {
-      console.error("Error fetching weather:", err);
+      setError("Server not reachable 😢");
+      setWeather(null);
     }
   };
 
@@ -68,37 +84,49 @@ export default function Home() {
       <div className="flex flex-col md:flex-row justify-center items-start gap-6 px-10 py-10 md:h-[85vh]">
         {/* 🔍 Search Container (Left) */}
         <div className="md:w-1/3 bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl p-8 border border-white/20 h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-sky-600 scrollbar-track-transparent">
-          <h2 className="text-2xl font-semibold mb-6 text-center">🔍 Search Local Weather</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-center">Search Local Weather</h2>
 
           <div className="flex items-center justify-center gap-3 mb-6">
             <input
               type="text"
-              placeholder="Enter your city..."
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
+              placeholder="Enter county or city..."
+              value={county}
+              onChange={(e) => setCounty(e.target.value)}
               className="w-2/3 px-4 py-3 rounded-lg bg-white/80 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-green-400"
             />
             <button
-              onClick={getWeather}
-              className="px-5 py-3 bg-green-500 hover:bg-green-600 rounded-lg font-semibold transition-all"
+              onClick={handleSearch}
+              className="bg-green-500 hover:bg-green-600 px-4 py-2 rounded-lg font-medium"
             >
               Search
             </button>
+
           </div>
 
-          {weather && (
+          {weather ? (
             <div className="bg-white/20 p-6 rounded-2xl backdrop-blur-sm text-center">
-              <h3 className="text-2xl font-semibold mb-2">{weather.location}</h3>
-              <p className="text-lg capitalize">{weather.description}</p>
-              <p className="text-5xl font-bold mt-3">{Math.round(weather.temperature)}°C</p>
+              <h3 className="text-2xl font-semibold mb-2">
+                {weather.name || county}
+              </h3>
+              <p className="text-lg capitalize">
+                {weather?.weather?.[0]?.description || "N/A"}
+              </p>
+              <p className="text-5xl font-bold mt-3">
+                {Math.round(weather?.main?.temp || 0)}°C
+              </p>
               <div className="flex justify-center gap-6 mt-4 text-sm text-gray-200">
-                <p>💧 {weather.humidity}% humidity</p>
+                <p>💨 {weather?.wind?.speed ?? "--"} m/s</p>
+                <p>💧 {weather?.main?.humidity ?? "--"}% humidity</p>
               </div>
+            </div>
+          ) : (
+            <div className="text-center text-gray-300 italic">
+              No weather data yet. Try searching for a city or county.
             </div>
           )}
         </div>
 
-        {/* 📊 Charts + Map (Right) */}
+        {/* Charts + Map (Right) */}
         <div className="md:w-2/3 bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl p-6 border border-white/20 h-[70vh] overflow-y-auto scrollbar-thin scrollbar-thumb-sky-600 scrollbar-track-transparent">
           <h2 className="text-2xl font-semibold mb-4 text-center">Kenya Annual Climate Trends</h2>
 
@@ -126,7 +154,7 @@ export default function Home() {
               </ResponsiveContainer>
             </div>
 
-            {/* 🌧 Rainfall Chart */}
+            {/*  Rainfall Chart */}
             <div className="h-[220px]">
               <h3 className="text-lg mb-2 text-blue-300 font-semibold">
                 🌧 Average Rainfall (mm)
@@ -149,7 +177,7 @@ export default function Home() {
               </ResponsiveContainer>
             </div>
 
-            {/* 🗺 Map */}
+            {/*  Map */}
             <div className="mt-6">
               <h3 className="text-lg mb-2 text-green-300 font-semibold">
                 🗺 Drought-Prone Areas in Kenya

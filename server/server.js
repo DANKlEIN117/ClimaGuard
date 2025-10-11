@@ -49,6 +49,10 @@ app.get("/api/weather/:location", async (req, res) => {
   }
 });
 
+import aiRoutes from "./routes/aiRoutes.js";
+app.use("/api/ai", aiRoutes);
+
+
 
 // Start server
 const PORT = process.env.PORT || 5000;
