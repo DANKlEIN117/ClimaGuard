@@ -80,7 +80,7 @@ function AIAssistant() {
             onChange={(e) => setPrompt(e.target.value)}  // ✅ FIXED
             placeholder="Ask about soil health, reforestation, or sustainable agriculture..."
             className="w-full p-3 rounded-lg bg-white/80 text-gray-900 focus:outline-none focus:ring-2 focus:ring-green-500"
-            rows="4"
+            rows="10"
         />
 
 
