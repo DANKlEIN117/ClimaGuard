@@ -48,7 +48,7 @@ export default function Home() {
 
     try {
       setError("");
-      const response = await fetch(`http://localhost:5000/api/weather/${county}`);
+      const response = await fetch(`https://climaguard.onrender.com/api/weather/${county}`);
       const data = await response.json();
 
       if (data.message === "Error fetching weather data" || data.cod === 401) {

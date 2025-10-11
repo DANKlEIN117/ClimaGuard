@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api/reports",
+  baseURL: "https://climaguard.onrender.com/api/reports",
 });
 
 export default API;
