@@ -1,4 +1,4 @@
-# 🌍 ClimaGuard — AI-Powered Agriculture and Weather Intelligence Platform
+# ClimaGuard — AI-Powered Agriculture and Weather Intelligence Platform
 
 **ClimaGuard** is a modern full-stack application that leverages **AI** and **real-time meteorological data** to deliver actionable insights for agriculture and environmental management.  
 It combines **Gemini-powered agricultural intelligence** with **OpenWeather API data** to help users make informed decisions about soil health, reforestation, and sustainable farming.
