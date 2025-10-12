@@ -33,7 +33,20 @@ router.post("/chat", async (req, res) => {
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+        body: JSON.stringify({
+          contents: [
+            {
+              parts: [
+                {
+                  text: `You are an agricultural AI assistant. Respond briefly and intelligently (max 10 sentences). Be helpful and clear.
+
+        User's question: ${prompt}`
+                }
+              ]
+            }
+          ]
+        }),
+
       }
     );
 
