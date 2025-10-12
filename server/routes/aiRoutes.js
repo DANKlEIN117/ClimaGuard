@@ -1,38 +1,46 @@
 import express from "express";
 import dotenv from "dotenv";
-import OpenAI from "openai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 dotenv.config();
 const router = express.Router();
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+// ✅ Test route to list available models
+router.get("/models", async (req, res) => {
+  try {
+    const result = await fetch("https://generativelanguage.googleapis.com/v1beta/models?key=" + process.env.GEMINI_API_KEY);
+    const data = await result.json();
+    res.json(data);
+  } catch (error) {
+    console.error("Error fetching models:", error);
+    res.status(500).json({ message: "Failed to fetch models" });
+  }
 });
 
+// ✅ Your AI chat route
 router.post("/chat", async (req, res) => {
   try {
     const { prompt } = req.body;
-
     if (!prompt) {
       return res.status(400).json({ message: "Prompt is required" });
     }
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are an agricultural AI assistant that provides detailed, practical, and sustainable farming advice. Focus on soil health, sustainable agriculture, reforestation, and land rehabilitation.",
-        },
-        { role: "user", content: prompt },
-      ],
-    });
+    const model = "models/gemini-2.5-flash"; // make sure this model exists
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/${model}:generateContent?key=${process.env.GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }),
+      }
+    );
 
-    const message = completion.choices[0].message.content;
-    res.json({ reply: message });
+    const data = await response.json();
+    res.json({ reply: data.candidates?.[0]?.content?.parts?.[0]?.text || "No response" });
   } catch (error) {
-    console.error("AI Route Error:", error);
+    console.error("Gemini AI Route Error:", error);
     res.status(500).json({ message: "Error generating AI response" });
   }
 });
