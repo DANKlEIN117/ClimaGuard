@@ -21,6 +21,9 @@ mongoose
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ DB connection failed:", err));
 
+app.get("/", (req, res) => {
+  res.send("ClimaGuard AI Backend Running ✅");
+});
 
 app.get("/api/weather/:location", async (req, res) => {
   const location = req.params.location;
