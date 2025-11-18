@@ -38,7 +38,7 @@ router.post("/chat", async (req, res) => {
             {
               parts: [
                 {
-                  text: `You are an agricultural AI assistant. Respond briefly and intelligently. Be helpful and clear.
+                  text: `Give full explanation.
 
         User's question: ${prompt}`
                 }
