@@ -38,7 +38,7 @@ router.post("/chat", async (req, res) => {
             {
               parts: [
                 {
-                  text: `Give full explanation.
+                  text: `Give first 10 sentenses.
 
         User's question: ${prompt}`
                 }
