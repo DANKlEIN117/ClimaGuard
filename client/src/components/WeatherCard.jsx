@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function WeatherCard({ county, setCounty, weather, handleSearch }) {
+export default function WeatherCard({ county, setCounty, weather, handleSearch, error }) {
   return (
     <div className="bg-white/10 backdrop-blur-md rounded-3xl shadow-2xl p-8 border border-white/20">
       <h2 className="text-2xl font-semibold mb-6 text-center">🌦 Weather in Kenya</h2>
@@ -22,6 +22,10 @@ export default function WeatherCard({ county, setCounty, weather, handleSearch }
         </button>
 
       </div>
+
+      {error && (
+        <p className="text-center text-red-300 mt-3">{error}</p>
+      )}
 
       {/* 🌡 Weather Display */}
       {weather ? (

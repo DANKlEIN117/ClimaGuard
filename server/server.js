@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 import reportRoutes from "./routes/reportRoutes.js";
 
 dotenv.config();
-console.log("✅ Loaded API key:", process.env.OPENWEATHER_API_KEY ? "Yes" : "No");
+console.log("Loaded API key:", process.env.OPENWEATHER_API_KEY ? "Yes" : "No");
 
 
 const app = express();
@@ -18,11 +18,11 @@ app.use("/api/reports", reportRoutes);
 // MongoDB Connection
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.error("❌ DB connection failed:", err));
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => console.error("DB connection failed:", err));
 
 app.get("/", (req, res) => {
-  res.send("ClimaGuard AI Backend Running ✅");
+  res.send("ClimaGuard AI Backend Running");
 });
 
 app.get("/api/weather/:location", async (req, res) => {
@@ -39,7 +39,7 @@ app.get("/api/weather/:location", async (req, res) => {
       return res.status(data.cod).json({ message: "Error fetching weather data" });
     }
 
-    // ✅ Return the full structure your React app expects
+    // Return the full structure your React app expects
     res.json({
       name: data.name,
       main: data.main,
@@ -59,4 +59,4 @@ app.use("/api/ai", aiRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
